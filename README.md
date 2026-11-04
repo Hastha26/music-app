@@ -18,8 +18,23 @@ This uses React, TypeScript, Next.js App Router conventions, and Vinext/Vite for
 
 ## Current scope
 
-No authentication, subscriptions, Spotify API, commercial catalog, or cross-device synchronization. Library data is local to this browser and can be lost when site data is cleared. Demo audio and vector covers were created for this project. Playback begins only after user interaction.
+Email/password authentication and account-owned playlists/likes are connected to a dedicated Supabase project. Guests use browser-local storage. Signed-in users may explicitly import their guest collection. Cloud writes use revision checks to prevent silent overwrites across devices. No subscriptions, Spotify API, or commercial catalog. Guest library data can be lost when site data is cleared. Demo audio and vector covers were created for this project. Playback begins only after user interaction.
 
 ## Next steps
 
 Add a dedicated Supabase backend for authentication, catalog metadata, storage policies, and account-owned playlists; then implement secure admin catalog uploads.
+
+
+## Supabase
+
+Project: `ovajmqidjbnbhrfcdsbu` (`music-app`, Mumbai). Client credentials in `lib/supabase-config.ts` are publishable, not privileged keys. All library access uses the signed-in user token and Postgres RLS. `supabase/schema.sql` records the applied schema; the remote migration is `create_private_music_libraries`.
+
+Authentication uses the browser Supabase client; there are no server routes relying on browser sessions or trusting local user claims. RLS enforces authorization at the database.
+
+Set Authentication → URL Configuration in the Supabase dashboard:
+- Site URL: `https://hastha-music-app.hastha.chatgpt.site`
+- Redirect URL: `https://hastha-music-app.hastha.chatgpt.site`
+
+Email confirmations and password-reset links depend on these settings. The application passes that production origin in each request. Keep email confirmation enabled. Production mail delivery uses the Supabase project's configured email service and limits.
+
+Verification: type check and production build; transaction-based database tests for owner writes, cross-user read/update/insert isolation, and stale revision rejection. Supabase security advisor returned no findings. Tests roll back all data.
