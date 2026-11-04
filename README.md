@@ -38,3 +38,17 @@ Set Authentication → URL Configuration in the Supabase dashboard:
 Email confirmations and password-reset links depend on these settings. The application passes that production origin in each request. Keep email confirmation enabled. Production mail delivery uses the Supabase project's configured email service and limits.
 
 Verification: type check and production build; transaction-based database tests for owner writes, cross-user read/update/insert isolation, and stale revision rejection. Supabase security advisor returned no findings. Tests roll back all data.
+
+
+## Cloudflare Pages
+
+This repository also includes a static client build, which uses the same music app and Supabase integration without the Sites worker. In Cloudflare Pages, connect this repository and use:
+
+- Project name: `cadence-music` (subject to availability)
+- Production branch: `main`
+- Framework preset: None
+- Build command: `pnpm run build:pages`
+- Build output directory: `pages-dist`
+- Node.js: 22 or later
+
+Run `pnpm install --frozen-lockfile` first for a local build. Cloudflare installs dependencies automatically. Once deployed, update Supabase Authentication URL Configuration to the exact deployed Pages origin and allow it as a redirect URL.
