@@ -52,3 +52,9 @@ This repository also includes a static client build, which uses the same music a
 - Node.js: 22 or later
 
 Run `pnpm install --frozen-lockfile` first for a local build. Cloudflare installs dependencies automatically. Once deployed, update Supabase Authentication URL Configuration to the exact deployed Pages origin and allow it as a redirect URL.
+
+## YouTube playback and search
+
+The visible YouTube player accepts standard video links without an API key. Search uses the Cloudflare Pages Function `functions/api/youtube.ts`; it requires a server-side `YOUTUBE_API_KEY` variable. Enable YouTube Data API v3 in Google Cloud, create an API key restricted to that API, then add it as an encrypted production variable in Cloudflare Pages and redeploy. Never put this key into browser code or commit it. Search requires an available quota and returns embeddable videos. Language selection influences the search query rather than guaranteeing the spoken language. Playback uses the unmodified visible YouTube player; restricted or unavailable videos can be opened on YouTube.
+
+Cloudflare Pages builds its `functions` directory automatically. This endpoint is specific to Pages hosting; it is not available on the earlier ChatGPT-hosted preview. No videos or audio are downloaded or extracted. YouTube collections are not yet added to the demo-track playlist schema.
